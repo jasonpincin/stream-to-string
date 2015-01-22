@@ -14,7 +14,13 @@
     "type": "git",
     "url": "git://github.com/jasonpincin/stream-to-string.git"
   },
-  "keywords": [],
+  "keywords": [
+    "stream",
+    "string",
+    "buffer",
+    "callback",
+    "promise"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jasonpincin/stream-to-string/issues"
