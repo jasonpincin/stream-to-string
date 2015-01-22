@@ -9,7 +9,7 @@ Pipe a stream into a string, collect value with callback or promise
 
 ## example
 
-```
+```javascript
 var toString = require('..'),
     through2 = require('through2'),
     stream   = through2()
@@ -30,7 +30,9 @@ stream.end()
 
 ## api
 
-`var toString = require('stream-to-string')`
+```javascript
+var toString = require('stream-to-string')
+```
 
 ### toString(stream [, cb])
 
