@@ -1,0 +1,41 @@
+{
+  "name": "stream-to-string",
+  "version": "0.0.0",
+  "description": "Pipe a stream into a string",
+  "main": "index.js",
+  "scripts": {
+    "test": "make test",
+    "travis-test": "make test && ((cat coverage/lcov.info | coveralls) || exit 0)",
+    "view-cover": "open coverage/index.html",
+    "vc": "open coverage/index.html",
+    "help": "make help"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jasonpincin/stream-to-string.git"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jasonpincin/stream-to-string/issues"
+  },
+  "homepage": "https://github.com/jasonpincin/stream-to-string",
+  "author": {
+    "name": "Jason Pincin",
+    "email": "jason@pincin.com",
+    "url": "http://jason.pincin.com/"
+  },
+  "contributors": [],
+  "devDependencies": {
+    "istanbul": "~0.2.8",
+    "jshint": "^2.5.6",
+    "tap-dot": "^0.2.2",
+    "tap-spec": "~0.1.9",
+    "tape": "~2.12.3",
+    "through2": "^0.6.3"
+  },
+  "dependencies": {
+    "promise-polyfill": "^1.1.6",
+    "tape": "^3.4.0"
+  }
+}
