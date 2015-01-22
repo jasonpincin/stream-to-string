@@ -1,6 +1,6 @@
 {
   "name": "stream-to-string",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Pipe a stream into a string, collect value with callback or promise",
   "main": "index.js",
   "scripts": {
