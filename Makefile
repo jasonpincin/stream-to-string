@@ -1,18 +1,9 @@
-.PHONY: help test test-grep
+.PHONY: help test check-cover view-cover npm-test travis-test clean
 
-# Escape code
-esc=`echo "\033"`
-
-# Set colors
-cc_red="${esc}[0;31m"
-cc_green="${esc}[0;32m"
-cc_yellow="${esc}[0;33m"
-cc_blue="${esc}[0;34m"
-cc_normal="${esc}[m\017"
+BIN = ./node_modules/.bin
 
 # Determine reporter
 reporter=tap
-runner=tape
 ifdef npm_config_dot
 	reporter=dot
 endif
@@ -24,29 +15,45 @@ all: help
 
 help:
 	@echo
-	@echo $(cc_blue)"To run tests:"$(cc_normal)
-	@echo "  [grep=pattern] npm test [--dot | --spec] [--coverage]"
+	@echo "To run tests:"
+	@echo "  npm test [--dot | --spec] [--coverage | --grep=<test file pattern>]"
 	@echo
 
-test:
-	$(if $(grep), @echo "Running test files that match pattern: $(grep)\n",)
-	@mkdir -p coverage
-	@jshint *.js example/*.js test/*.js 2>&1 | cat > coverage/linterror
-	@#jshint *.js lib/*.js example/*.js test/*.js 2>&1 | cat > coverage/linterror
-	$(if $(filter-out tap, $(reporter)), @printf $(cc_red),)
-	@if [ -s coverage/linterror ]; then cat coverage/linterror | sed '/^$$/d' | sed 's/\([0-9][0-9]*\) error/\1 jshint error/'; echo; exit 1; fi
-	$(if $(filter-out tap, $(reporter)), @printf $(cc_normal),)
-	@rm -f coverage/linterror
-	$(if $(filter tap, $(reporter)), @find ./test -name "*.js" -type f -maxdepth 1 | grep ""$(grep) | xargs istanbul cover --report lcovonly --print none tape --)
-	$(if $(filter dot, $(reporter)), @find ./test -name "*.js" -type f -maxdepth 1 | grep ""$(grep) | xargs istanbul cover --report lcovonly --print none tape -- | tap-dot)
-	$(if $(filter spec, $(reporter)), @find ./test -name "*.js" -type f -maxdepth 1 | grep ""$(grep) | xargs istanbul cover --report lcovonly --print none tape -- | tap-spec)
+lint:
+	@jshint --exclude '**/{coverage,node_modules}/*' **/*.js
+
+test: node_modules
+	$(if $(npm_config_grep), @echo "Running test files that match pattern: $(npm_config_grep)\n",)
+	$(if $(filter tap, $(reporter)), @find ./test -maxdepth 1 -name "*.js" -type f | grep ""$(npm_config_grep) | xargs $(BIN)/istanbul cover --report lcovonly --print none $(BIN)/tape --)
+	$(if $(filter dot, $(reporter)), @find ./test -maxdepth 1 -name "*.js" -type f | grep ""$(npm_config_grep) | xargs $(BIN)/istanbul cover --report lcovonly --print none $(BIN)/tape -- | $(BIN)/tap-dot)
+	$(if $(filter spec, $(reporter)), @find ./test -maxdepth 1 -name "*.js" -type f | grep ""$(npm_config_grep) | xargs $(BIN)/istanbul cover --report lcovonly --print none $(BIN)/tape -- | $(BIN)/tap-spec)
 ifdef npm_config_coverage
 	@echo
-	@istanbul report text | grep -v "Using reporter" | grep -v "Done"
+	@$(BIN)/istanbul report text | grep -v "Using reporter" | grep -v "Done"
 endif
-	@istanbul report html > /dev/null
+	@$(BIN)/istanbul report html > /dev/null
+
+npm-test: lint test check-cover
+
+travis-test: lint test check-cover
+	@(cat coverage/lcov.info | coveralls) || exit 0
+
+check-cover: coverage
 	@rm -f coverage/error
-	@istanbul check-coverage --statements 100 --branches 100 --functions 100 --lines 100 2>&1 | cat > coverage/error
-	$(if $(filter-out tap, $(reporter)), @printf $(cc_red),)
-	$(if $(grep),,@if [ -s coverage/error ]; then echo; grep ERROR coverage/error; echo; exit 1; fi)
-	$(if $(filter-out tap, $(reporter)), @printf $(cc_normal),)
+	@$(BIN)/istanbul check-coverage --statements 100 --branches 100 --functions 100 --lines 100 2>&1 | cat > coverage/error
+	$(if $(npm_config_grep),,@if [ -s coverage/error ]; then echo; grep ERROR coverage/error; echo; exit 1; fi)
+
+view-cover: coverage
+	@$(BIN)/opn coverage/index.html
+
+coverage:
+	@make test
+
+node_modules:
+	@echo '# *** running "npm install" for you ***'
+	@npm install
+	@mkdir -p node_modules
+	@touch node_modules
+
+clean:
+	@rm -rf node_modules coverage
