@@ -6,7 +6,7 @@ test('value', function (t) {
     t.plan(1)
 
     var stream = through2()
-    toString(stream, function (err, str) {
+    toString(stream, undefined, function (err, str) {
         t.equal(str, 'this is a test', 'should match expected value')
     })
 

@@ -1,12 +1,12 @@
 var Promise = require('promise-polyfill')
 
-module.exports = function (stream, cb) {
+module.exports = function (stream, enc, cb) {
     cb = cb || function () {}
     var str = ''
 
     return new Promise (function (resolve, reject) {
         stream.on('data', function (data) {
-            str += data.toString()
+            str += (typeof enc === 'string') ? data.toString(enc) : data.toString()
         })
         stream.on('end', function () {
             resolve(str)

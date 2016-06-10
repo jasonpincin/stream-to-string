@@ -6,7 +6,7 @@ test('error', function (t) {
     t.plan(1)
 
     var stream = through2()
-    toString(stream, function (err, str) {
+    toString(stream, undefined, function (err, str) {
         t.true(err, 'cb executed with err on stream error')
     })
 
