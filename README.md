@@ -34,9 +34,9 @@ stream.end()
 var toString = require('stream-to-string')
 ```
 
-### toString(stream [, cb])
+### toString(stream[, enc][, cb])
 
-Collects stream data into a string. Executes optional callback with `err, string`. Returns a promise.
+Collects stream data into a string. Accepts an optional encoding argument used when converting the stream. Executes optional callback with `err, string`. Returns a promise.
 
 ## testing
 
