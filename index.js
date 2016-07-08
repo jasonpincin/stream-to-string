@@ -1,7 +1,12 @@
 var Promise = require('promise-polyfill')
 
 module.exports = function (stream, enc, cb) {
+    if (typeof enc === 'function') {
+        cb = enc;
+        enc = null;
+    }
     cb = cb || function () {}
+
     var str = ''
 
     return new Promise (function (resolve, reject) {
