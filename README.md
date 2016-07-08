@@ -3,7 +3,6 @@
 [![NPM version](https://badge.fury.io/js/stream-to-string.png)](http://badge.fury.io/js/stream-to-string)
 [![Build Status](https://travis-ci.org/jasonpincin/stream-to-string.svg?branch=master)](https://travis-ci.org/jasonpincin/stream-to-string)
 [![Coverage Status](https://coveralls.io/repos/jasonpincin/stream-to-string/badge.png?branch=master)](https://coveralls.io/r/jasonpincin/stream-to-string?branch=master)
-[![Davis Dependency Status](https://david-dm.org/jasonpincin/stream-to-string.png)](https://david-dm.org/jasonpincin/stream-to-string)
 
 Pipe a stream into a string, collect value with callback or promise
 
