@@ -1,4 +1,4 @@
-.PHONY: help test check-cover view-cover npm-test travis-test clean
+.PHONY: help test test-types check-cover view-cover npm-test travis-test clean
 
 BIN = ./node_modules/.bin
 
@@ -33,7 +33,11 @@ ifdef npm_config_coverage
 endif
 	@$(BIN)/istanbul report html > /dev/null
 
-npm-test: lint test check-cover
+test-types: node_modules
+	@echo 'Running types tests (via tsd)'
+	@$(BIN)/tsd
+
+npm-test: lint test check-cover test-types
 
 travis-test: lint test check-cover
 	@(cat coverage/lcov.info | coveralls) || exit 0
