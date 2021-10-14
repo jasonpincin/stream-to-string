@@ -5,21 +5,20 @@ module.exports = function (stream, enc, cb) {
         cb = enc
         enc = null
     }
-    cb = cb || function () {}
 
     var str = ''
 
-    return new Promise (function (resolve, reject) {
+    var p = new Promise (function (resolve, reject) {
         stream.on('data', function (data) {
             str += (typeof enc === 'string') ? data.toString(enc) : data.toString()
         })
         stream.on('end', function () {
             resolve(str)
-            cb(null, str)
         })
-        stream.on('error', function (err) {
-            reject(err)
-            cb(err)
-        })
+        stream.on('error', reject)
     })
+    if (cb) {
+        p.then(function (str) { cb(null, str) }, cb)
+    }
+    return p
 }
