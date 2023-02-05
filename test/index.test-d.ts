@@ -1,7 +1,7 @@
 import { expectType } from "tsd";
 import streamToString = require("..");
 
-const stream = null as any as NodeJS.ReadableStream;
+declare const stream: NodeJS.ReadableStream;
 
 // test type exports
 type CB = streamToString.Callback;

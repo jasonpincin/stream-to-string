@@ -20,7 +20,7 @@ help:
 	@echo
 
 lint:
-	@jshint --exclude '**/{coverage,node_modules}/*' **/*.js
+	@$(BIN)/jshint .
 
 test: node_modules
 	$(if $(npm_config_grep), @echo "Running test files that match pattern: $(npm_config_grep)\n",)
@@ -39,7 +39,7 @@ test-types: node_modules
 
 npm-test: lint test check-cover test-types
 
-travis-test: lint test check-cover
+travis-test: npm-test
 	@(cat coverage/lcov.info | coveralls) || exit 0
 
 check-cover: coverage
